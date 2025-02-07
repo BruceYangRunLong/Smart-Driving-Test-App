@@ -1,0 +1,65 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="dpa.Views.ProgressView"
+             DataContext="{Binding ProgressViewModel, Source={StaticResource ServiceLocator}}">
+    <StackPanel>
+        <ScrollViewer VerticalAlignment="Top"
+                  VerticalScrollBarVisibility="Visible"
+                  HorizontalScrollBarVisibility="Visible"
+                  Margin="5,5,5,0"
+                  Height="300"> <!-- 设置固定高度为300像素 -->
+        <ItemsControl ItemsSource="{Binding records}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Background="#F5F5F5"
+                                Margin="0,5,0,5">
+                        <!-- 使用按钮并绑定命令，同时传递题目的 Id 作为参数 -->
+                        <Label HorizontalContentAlignment="Left"
+                               Margin="5,0,0,8"
+                               Content="/////////////////////"
+                               VerticalAlignment="Center" />
+                        <Label HorizontalContentAlignment="Left"
+                               Margin="5,0,0,8"
+                               Content="{Binding date}"
+                               VerticalAlignment="Center" />
+                        <Label HorizontalContentAlignment="Left"
+                               Margin="5,0,0,8"
+                               Content="对/错题数："
+                               VerticalAlignment="Center" />
+                        <Grid ColumnDefinitions="Auto,Auto">
+                            <Label Grid.Column="0" HorizontalContentAlignment="Left"
+                                   Margin="5,0,30,8"
+                                   Content="{Binding right}"
+                                   VerticalAlignment="Center" />
+                            <Label Grid.Column="1" HorizontalContentAlignment="Left"
+                                   Margin="5,0,0,8"
+                                   Content="{Binding wrong}"
+                                   VerticalAlignment="Center" />
+                        </Grid>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+        <Label>预测考试分数：（线性回归）</Label>
+        <Label>——————————————————————</Label>
+        <Grid ColumnDefinitions="Auto,*">
+            <Label Grid.Column="0"
+                   Content="{Binding PredictScore}"
+                   Margin="20,0,50,0"
+                   Foreground="Red"
+                   FontSize="30"></Label>
+            <Label Grid.Column="1"
+                   Content="分"
+                   FontSize="30"></Label>
+        </Grid>
+    </StackPanel>
+</UserControl>

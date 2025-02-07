@@ -1,0 +1,158 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lvm="using:dpa.Library.ViewModels"
+             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+             xmlns:converters="clr-namespace:dpa.Converters"
+             xmlns:lc="using:dpa.Converters"
+             xmlns:anim="https://github.com/whistyun/AnimatedImage.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="dpa.Views.WrongView"
+             DataContext="{Binding WrongViewModel, Source={StaticResource ServiceLocator}}">
+    
+    <UserControl.Resources>
+        <converters:ByteArrayToBitmapConverter x:Key="ByteArrayToBitmapConverter" />
+        <lc:SelectionConverter x:Key="SelectionConverter" />
+        <lc:WrongAnswerHighlightConverter x:Key="AnswerHighlightConverter" />
+        <lc:StringNotNullOrEmptyConverter x:Key="StringNotNullOrEmptyConverter"/>
+        <lc:StringNullOrEmptyConverter x:Key="StringNullOrEmptyConverter"/>
+        <lc:BoolToColorConverter x:Key="BoolToColorConverter1"/>
+    </UserControl.Resources>
+
+
+    <Interaction.Behaviors>
+        <EventTriggerBehavior EventName="Initialized">
+            <InvokeCommandAction Command="{Binding OnInitializedCommand}" />
+        </EventTriggerBehavior>
+    </Interaction.Behaviors>
+
+    <Grid ColumnDefinitions="*,300">
+        <Border Grid.Column="0" BorderThickness="1.5" BorderBrush="LightGray" Margin="60,10,10,10">
+            
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Spacing="20">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,0">
+                   
+                    <Button Content="上一题" Command="{Binding PreviousQuestionCommand}" Margin="10,0,0,0" />
+                   
+                    <TextBlock Text="{Binding CurrentQuestionIndex}" FontWeight="Bold" Margin="0,0,5,0" />
+                    <TextBlock Text="/" FontWeight="Bold" Margin="0,0,5,0" />
+                    <TextBlock Text="{Binding TotalQuestions}" FontWeight="Bold" />
+                   
+                    <Button Content="下一题" Command="{Binding NextQuestionCommand}" Margin="10,0,0,0" />
+                </StackPanel>
+                <Image asyncImageLoader:ImageLoader.Source="{Binding CurrentQuestion.url}" Width="300" 
+                       Height="200" HorizontalAlignment="Center" 
+                       IsVisible="{Binding CurrentQuestion.url, 
+                       Converter={StaticResource StringNotNullOrEmptyConverter}}" />
+                <TextBlock Text="您还没有将任何题目加入错题列表" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                           IsVisible="{Binding CurrentQuestion.url, Converter={StaticResource StringNullOrEmptyConverter}}" />
+
+        
+                <TextBlock Text="{Binding CurrentQuestion.question}"
+                           FontWeight="Bold"
+                           FontSize="15"
+                           HorizontalAlignment="Center"
+                           TextWrapping="Wrap" />
+        
+                <StackPanel HorizontalAlignment="Center">
+                    <RadioButton Content="{Binding CurrentQuestion.item1}" GroupName="Options"
+                                 Tag="1" IsEnabled="False"
+                                 Background="{Binding Path=CurrentQuestion, Converter={StaticResource AnswerHighlightConverter}, ConverterParameter=1}"
+                                 IsChecked="{Binding CurrentQuestion.user_answer, Converter={StaticResource SelectionConverter}, ConverterParameter=1}" />
+                    <RadioButton Content="{Binding CurrentQuestion.item2}" GroupName="Options"
+                                 Tag="2" IsEnabled="False"
+                                 Background="{Binding Path=CurrentQuestion, Converter={StaticResource AnswerHighlightConverter}, ConverterParameter=2}"
+                                 IsChecked="{Binding CurrentQuestion.user_answer, Converter={StaticResource SelectionConverter}, ConverterParameter=2}" />
+                    <RadioButton Content="{Binding CurrentQuestion.item3}" GroupName="Options"
+                                 Tag="3" IsEnabled="False"
+                                 Background="{Binding Path=CurrentQuestion, Converter={StaticResource AnswerHighlightConverter}, ConverterParameter=3}"
+                                 IsChecked="{Binding CurrentQuestion.user_answer, Converter={StaticResource SelectionConverter}, ConverterParameter=3}" />
+                    <RadioButton Content="{Binding CurrentQuestion.item4}" GroupName="Options"
+                                 Tag="4" IsEnabled="False"
+                                 Background="{Binding Path=CurrentQuestion, Converter={StaticResource AnswerHighlightConverter}, ConverterParameter=4}"
+                                 IsChecked="{Binding CurrentQuestion.user_answer, Converter={StaticResource SelectionConverter}, ConverterParameter=4}" />
+                </StackPanel>
+                <Label FontSize="15"
+                       Foreground="#505050"
+                       Margin="10,-10,0,0"
+                       Content="答案解析"
+                       VerticalAlignment="Top" />
+                <TextBlock Text="{Binding CurrentQuestion.explains}"
+                           Margin="0,-20,0,0"
+                           Padding="10"
+                           Background="#F0F0F0"
+                           TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+        
+        <Grid Grid.Column="1" ColumnDefinitions="50,250">
+            <Grid Grid.Column="0" Margin="0,0,0,0" />
+            <Grid Grid.Column="1">
+                <Border BorderThickness="1.2" BorderBrush="#EDEDED">
+                    <StackPanel>
+                        <Label FontSize="18"
+                               Foreground="#505050"
+                               Margin="10,5,0,0"
+                               Content="公益广告"
+                               VerticalAlignment="Top" />
+                        <Image asyncImageLoader:ImageLoader.Source="avares://dpa/Assets/jiaotonganquan.png"
+                               Height="100"
+                               Margin="5,5,5,5" />
+                        <TextBox IsReadOnly="True"
+                                 FontSize="12"
+                                 TextAlignment="Left"
+                                 VerticalContentAlignment="Top"
+                                 Padding="5,5,5,5"
+                                 Margin="6,5,6,0"
+                                 TextWrapping="Wrap"
+                                 MinHeight="80"
+                                 MaxHeight="80"
+                                 Background="Azure"
+                                 Focusable="False"
+                                 Text="“安全驾驶，不仅是对自己负责，更是对他人生命的尊重。每一次出行，都是一次生命的旅行。让我们从自身做起，遵守交通规则，文明礼让，共同营造一个安全、有序、和谐的交通环境。”" />
+                        <Label FontSize="18"
+                               Foreground="#505050"
+                               Margin="10,5,0,0"
+                               Content="错题列表"
+                               VerticalAlignment="Top" />
+
+                        <!-- 错题列表控件 -->
+                        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      Margin="5,10,5,0"
+                                      Height="250"> <!-- 设置固定高度为300像素 -->
+                            <ItemsControl ItemsSource="{Binding ExerciseQuestions}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <!-- 使用按钮并绑定命令，同时传递题目的 Id 作为参数 -->
+                                        <Button HorizontalContentAlignment="Left"
+                                                Margin="0,0,0,8"
+                                                MinWidth="250"
+                                                Content="{Binding question}" 
+                                                Command="{Binding DataContext.OnQuestionClickedCommand, 
+                                                RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding Id }" 
+                                                VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Border>
+            </Grid>
+            
+            <!-- SplitView Pane -->
+            <SplitView Grid.Column="1" DisplayMode="Overlay" IsPaneOpen="{Binding isPaneOpened}" Width="250">
+                <SplitView.Pane>
+                    <Border BorderThickness="1.2" BorderBrush="#EDEDED" />
+                </SplitView.Pane>
+            </SplitView>
+        </Grid>
+    </Grid>
+</UserControl>
